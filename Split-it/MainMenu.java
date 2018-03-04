@@ -1,4 +1,11 @@
-import java.util.Scanner;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package MainMenu;
+
+ import java.util.Scanner;
 
 public class MainMenu
 {
@@ -78,4 +85,6 @@ public class MainMenu
         mainScreen();
     }
 }
+
+
 
