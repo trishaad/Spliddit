@@ -1,182 +1,121 @@
-/**
- * This class represents a Project
- * @author Rae Harbird
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-class Project {
+package MainMenu;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ *
+ * @author trishaadbsurty
+ */
+public class Project {
     
-    public static final int MAXMEMBERS = 5;
-    public static final int MINMEMBERS = 3;
-    public static final int MAXNAMELENGTH = 30;
-    public static final int MINNAMELENGTH = 1;
+private String theName;
+private int teamSize;
+private Set<String> teamList;
+private HashMap<String, HashMap<String, Integer>> votes;
 
 
-    private String name;
-    private int numberOfMembers;
-    private String[] teamNames = new String[MAXMEMBERS];
+Project (String teamName, int memberSize, Set<String> nameList)
+{
+    theName = teamName;
+    teamSize = memberSize;
+    teamList = nameList;
     
-    /** Creates a project with the specified name, number of participants and 
-     *  team members.
-     * @param theName The project name.
-     * @param theNumberOfParticipants The number of people in a team
-     * @param theTeam The names of team members.
-     */
+    votes = new HashMap<String, HashMap<String, Integer>>();
     
-    Project (String theName, int theNumberOfParticipants, String [] theTeam)
-    {
-        if (validateName(theName))
-        {
-            name = theName;
-        }
-        else
-        {
-            fatalError("Constructor passed malformed project name.");
-        }
+    for (String memberName: nameList) {
+        HashMap<String, Integer> otherMembers = new HashMap<String, Integer>();
         
-        
-        if (validateNumberOfMembers(theNumberOfParticipants) )
-        {
-            numberOfMembers = theNumberOfParticipants;
-        }       
-        else
-        {
-            fatalError("Constructor passed invalid number of participants.");
-        }
-        
-        
-        if (validateTheTeam(theTeam, theNumberOfParticipants))
-        {
-            teamNames = theTeam;  
-        }
-        else
-        {
-            fatalError("Constructor passed malformed team names.");
-        }
-        
-    }
-
-    /** Error generated when constructor is passed invalid parameter.
-     *  The program will terminate. 
-    */
-    public static void fatalError(String errorMessage)
-    {
-        System.out.println("Fatal error: " + errorMessage);
-        // A non-zero status indicates an abnormal termination.
-        System.exit(1);
-    }
-    
-    
-    /** Create a String to represent a Project object.
-    */    
-    @Override
-    public String toString()
-    {
-        return ("\nProject name: " + name 
-                + ", has " 
-                + numberOfMembers + " team members named: "
-                + getTeamNames());
-    }
-
-    
-    /**
-     * 
-     * @return The project name
-     */
-    public String getName()   
-    {
-        return name;
-    }
-    
-   /**
-     * 
-     * @return The number of team members
-     */
-    public int getNumberOfTeamMembers()   
-    {
-        return numberOfMembers;
-    }    
- 
-   /**
-     * 
-     * @return The names of all team members
-     */
-    public String getTeamNames()   
-    {
-        String theNames = "";
-        
-        for (int i = 0; i < numberOfMembers; i++)
-        {
-            theNames += teamNames[i];
-            if (i < (numberOfMembers - 1))
-            {
-                theNames += ", ";
+        for (String otherMemberName: nameList) {
+            if (!otherMemberName.equals(memberName)) {
+                otherMembers.put(otherMemberName, 0);
             }
         }
-        return theNames;
-    }    
         
-    /**
-     * Validate a name.
-     * Check whether the name is empty. 
-     * Check whether the name is composed of alphanumeric characters.
-     * Note: There are many different ways to accomplish these checks.
-     * @param theName The name might represent a project or team member.
-     * @return A boolean value indicating whether the name was valid or not.
-    */
-    public static boolean validateName(String theName)
-    {
-        boolean valid = true;
-
-        if (theName.isEmpty())
-        {
-            valid = false;
-        }
-
-        for (int i = 0; i < theName.length(); i++)          
-        {
-            if (!Character.isLetterOrDigit(theName.charAt(i)))
-                valid = false;   
-        }
-          
-        return valid;
-    }
-
-    /*
-     * Check whether the number of team members is between MINMEMBERS and 
-     * MAXMEMBERS.
-     * @param theNumberOfMembers
-    */
-    static boolean validateNumberOfMembers(int theNumberOfMembers) {
-        return (theNumberOfMembers >= MINMEMBERS && theNumberOfMembers <= MAXMEMBERS);
-    }
-    
-    /**
-     * Validate the names of team members.
-     * For each name in the array, up to the number of participants:
-     * <ul>
-     * <li> Check whether the name is empty. 
-     * <li> Check whether the name is composed of alphanumeric characters.
-     * </ul>
-     * Note: There are many different ways to accomplish these checks, this is 
-     * just one way.
-     * @param theTeam An array containing the names of team members.
-     * @param theNumberOfParticipants The number of team members.
-     * @return A boolean value indicating whether the names are valid or not.
-    */
-    private boolean validateTheTeam(String[] theTeam, int theNumberOfParticipants) 
-    {
-        String theName;       
-        boolean valid = true;
-      
-        if (valid)
-        {
-            for (int i = 0; i < theNumberOfParticipants; i++)
-            {
-                theName = theTeam[i];
-                valid = validateName(theName);
-            }
-        }  
-        return valid;
+        votes.put(memberName, otherMembers);
     }
 }
 
+ //Creates a String which is a textual representation of the Project object.
+    
+@Override
+public String toString()
+{
+    
+     return (theName + ","
+             + teamSize + ","
+             + printTeamList() + ","
+             + printVotes() + "\n");
+}
+
+public String getTheName()
+{
+    return theName;
+}
+
+public Integer getTheTeamSize()
+{
+    return teamSize;
+}
+
+public Set<String> getTeamList()
+{
+    return teamList;
+}
+  
+public String printTeamList()
+{
+            String theList = "";
+            String comma = ",";
+        
+        for (String memberName : teamList)
+        {
+            theList += (memberName + comma);
+        }
+    //removes comma at the end of the team list    
+    return theList.substring(0, theList.length() -1);    
+}
+
+public HashMap<String, HashMap<String, Integer>> getVotes()
+{
+    return votes;
+}
+
+public Set<String> otherMembers(String memberName){
+    return votes.get(memberName).keySet();
+}
+
+public void recordVotes(String teamMember, HashMap<String, Integer> teamMemberVotes)
+{
+    votes.put(teamMember, teamMemberVotes);
+}
+
+public String printVotes()
+{ 
+    String voteString = "";
+    String comma = ",";
+    for (Map.Entry<String,HashMap<String, Integer>> pair : votes.entrySet()) 
+    {
+        String voterName = pair.getKey();
+        voteString += (voterName + comma);        
+        HashMap<String, Integer> memberVotes = pair.getValue();
+        for (Map.Entry<String, Integer> memberVote : memberVotes.entrySet()) 
+        {
+            String votedMemberName = memberVote.getKey();
+            String votePoint = memberVote.getValue().toString();
+            voteString += (votedMemberName + comma + votePoint + comma);            
+        }
+    }
+    
+   //removes comma at the end of the vote string  
+   return voteString.substring(0, voteString.length() -1);   
+}
+        
+}
